@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All System Transactions - LiquidityRouter Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">LiquidityRouter [Admin]</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_banks') }}">Manage Banks</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_users') }}">Manage Users</a></li>
+                    <li class="nav-item"><a class="nav-link active"
+                            href="{{ url_for('transactions') }}">Transactions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('compliance_rules') }}">Compliance
+                            Rules</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('audit_logs') }}">Audit Logs</a></li>
+                </ul>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Global Transaction Monitoring</h2>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Treasury User</th>
+                                <th>Amount</th>
+                                <th>Corridor</th>
+                                <th>Selected Bank</th>
+                                <th>Total Cost</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if transactions %}
+                            {% for tx in transactions %}
+                            <tr>
+                                <td><strong>TX{{ tx.transaction_id }}</strong></td>
+                                <td>{{ tx.treasury_name }}</td>
+                                <td>₹{{ "{:,.2f}".format(tx.amount) }}</td>
+                                <td>{{ tx.source_country }} ({{ tx.source_currency }}) &rarr; {{ tx.destination_country
+                                    }} ({{ tx.destination_currency }})</td>
+                                <td>{{ tx.bank_name if tx.bank_name else 'None' }}</td>
+                                <td>{% if tx.total_cost %}₹{{ "{:,.2f}".format(tx.total_cost) }}{% else %}-{% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-status-{{ tx.status|lower }}">
+                                        {{ tx.status }}
+                                    </span>
+                                </td>
+                                <td><small class="text-muted">{{ tx.created_at }}</small></td>
+                                <td>
+                                    <a href="{{ url_for('transaction_details', transaction_id=tx.transaction_id) }}"
+                                        class="btn btn-sm btn-primary">Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center text-muted py-4">No transactions recorded in system.
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

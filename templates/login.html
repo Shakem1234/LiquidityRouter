@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LiquidityRouter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+
+<div class="container">
+    <div class="auth-container card">
+        <div class="card-header text-center bg-primary text-white py-3">
+            <h3 class="mb-0 fw-bold">LiquidityRouter</h3>
+            <p class="mb-0 text-white-50 small">Adaptive Payment Routing System</p>
+        </div>
+        <div class="card-body p-4">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label font-weight-bold">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label font-weight-bold">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter password">
+                </div>
+                <div class="d-grid gap-2 mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <p class="mb-0">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="bg-light p-3 rounded border">
+                <h6 class="fw-bold mb-2 text-secondary">Demo Login Credentials:</h6>
+                <ul class="list-unstyled small mb-0">
+                    <li><strong>Admin:</strong> admin@liquidity.com / admin123</li>
+                    <li><strong>Treasury:</strong> treasury@demo.com / treasury123</li>
+                    <li><strong>Bank A:</strong> banka@demo.com / bank123</li>
+                    <li><strong>Bank B:</strong> bankb@demo.com / bank123</li>
+                    <li><strong>Bank C:</strong> bankc@demo.com / bank123</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Transaction - LiquidityRouter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('treasury_dashboard') }}">LiquidityRouter</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('treasury_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('new_transaction') }}">New
+                            Transaction</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('my_transactions') }}">My Transactions</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('treasury_profile') }}">Profile</a></li>
+                </ul>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 650px;">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">New International Payment Request</h4>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted mb-4">Enter payment parameters below. The LiquidityRouter system will evaluate
+                    available bank routes, check liquidity, FX spread, latency, and compliance rules automatically.</p>
+
+                <form action="{{ url_for('new_transaction') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label fw-bold">Transfer Amount (INR)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="number" step="0.01" class="form-control form-control-lg" id="amount"
+                                name="amount" required placeholder="e.g. 1000000" value="1000000">
+                        </div>
+                        <div class="form-text">Example: 1000000 for ₹10,00,000 INR transaction.</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="source_country" class="form-label fw-bold">Source Country</label>
+                            <input type="text" class="form-control" id="source_country" name="source_country" required
+                                value="India">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="destination_country" class="form-label fw-bold">Destination Country</label>
+                            <input type="text" class="form-control" id="destination_country" name="destination_country"
+                                required value="USA">
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="source_currency" class="form-label fw-bold">Source Currency</label>
+                            <select class="form-select" id="source_currency" name="source_currency" required>
+                                <option value="INR" selected>INR - Indian Rupee</option>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="destination_currency" class="form-label fw-bold">Destination Currency</label>
+                            <select class="form-select" id="destination_currency" name="destination_currency" required>
+                                <option value="USD" selected>USD - US Dollar</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Send Payment &amp; Evaluate Route</button>
+                        <a href="{{ url_for('treasury_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
